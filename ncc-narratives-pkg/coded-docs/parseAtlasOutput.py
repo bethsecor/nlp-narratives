@@ -2,7 +2,7 @@ import zipfile
 import xml.dom.minidom
 import xml.etree.ElementTree
 
-document = zipfile.ZipFile('/home/bsecor/ncc-narratives/narratives/docx/C.2 Q16 S+C ALL CREATED CODES.docx')
+document = zipfile.ZipFile('/home/bsecor/ncc-narratives/data/docx/C.2 Q16 S+C ALL CREATED CODES.docx')
 
 WORD_NAMESPACE = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 PARA = WORD_NAMESPACE + 'p'
@@ -24,7 +24,8 @@ for paraElement in tree.iter(PARA):
         codedSegments = []
         codes.append(texts[1])
     elif texts and code != "":
-        codedSegments.append(''.join(texts))
+        segment = ''.join(texts)
+        if not (segment.split(' ')[1] == 'Quotations:' or len(segment.split(' ')[0].split(':')) == 2):
+            codedSegments.append(segment)
 
-print(data.keys())
 print(data)
