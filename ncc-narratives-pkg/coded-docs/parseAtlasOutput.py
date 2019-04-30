@@ -1,6 +1,7 @@
 import zipfile
 import xml.dom.minidom
 import xml.etree.ElementTree
+import pandas
 
 def parse_atlas_output(docx):
     document = zipfile.ZipFile(docx)
@@ -13,22 +14,18 @@ def parse_atlas_output(docx):
     document.close()
     
     code = ""
-    data = {}
-    codes = []
+    code_series = []
+    segment_series = []
     for paraElement in tree.iter(PARA):
         texts = [node.text
                  for node in paraElement.iter(TEXT)
                  if node.text]
         if texts and texts[0] in("○","●"):
-            if code != "": data[code] = codedSegments
             code = texts[1].strip()
-            codedSegments = []
-            codes.append(texts[1])
         elif texts and code != "":
             segment = ''.join(texts)
             if not (segment.split(' ')[1] == 'Quotations:' or len(segment.split(' ')[0].split(':')) == 2):
-                codedSegments.append(segment)
-    print(data)
-    return(data)
-
-parse_atlas_output('/home/bsecor/ncc-narratives/data/docx/C.2 Q16 S+C ALL CREATED CODES.docx')
+                code_series.append(code)
+                segment_series.append(segment)
+    code_segment_df = pandas.DataFrame({"code": code_series, "segment": segment_series})
+    return(code_segment_df)
