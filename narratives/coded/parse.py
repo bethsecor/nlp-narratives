@@ -20,7 +20,6 @@ def parse_atlas_output(docx):
         texts = [node.text
                  for node in paraElement.iter(TEXT)
                  if node.text]
-        print(texts)
         if texts and texts[0] in("○","●"):
             code = texts[2].strip()
         elif texts and code != "":
@@ -29,5 +28,4 @@ def parse_atlas_output(docx):
                 code_series.append(code)
                 segment_series.append(segment)
     code_segment_df = pandas.DataFrame({"code": code_series, "segment": segment_series})
-    print(code_segment_df)
     return(code_segment_df)
