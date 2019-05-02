@@ -20,8 +20,9 @@ def parse_atlas_output(docx):
         texts = [node.text
                  for node in paraElement.iter(TEXT)
                  if node.text]
+        print(texts)
         if texts and texts[0] in("○","●"):
-            code = texts[1].strip()
+            code = texts[2].strip()
         elif texts and code != "":
             segment = ''.join(texts)
             if not (segment.split(' ')[1] == 'Quotations:' or len(segment.split(' ')[0].split(':')) == 2):
