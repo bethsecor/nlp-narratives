@@ -28,4 +28,5 @@ def parse_atlas_output(docx):
                 code_series.append(code)
                 segment_series.append(segment)
     code_segment_df = pandas.DataFrame({"code": code_series, "segment": segment_series})
+    print(code_segment_df)
     return(code_segment_df)
