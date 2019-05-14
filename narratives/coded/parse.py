@@ -24,7 +24,8 @@ def parse_atlas_output(docx):
             code = texts[2].strip()
         elif texts and code != "":
             segment = ''.join(texts)
-            if not (segment.split(' ')[1] == 'Quotations:' or len(segment.split(' ')[0].split(':')) == 2):
+            ss = segment.split(' ')
+            if not ((len(ss) >= 2 and ss[1] in('Quotations:','Codes:')) or len(ss[0].split(':')) == 2):
                 code_series.append(code)
                 segment_series.append(segment)
     code_segment_df = pandas.DataFrame({"code": code_series, "segment": segment_series})
