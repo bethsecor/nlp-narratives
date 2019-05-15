@@ -2,6 +2,7 @@ from narratives.coded.parse import parse_atlas_output
 from narratives.coded.convert import convert_doc2docx
 from glob import glob
 from pandas import pandas
+import feather
 
 frames = []
 for doc in glob('./data/*.doc'):
@@ -9,4 +10,4 @@ for doc in glob('./data/*.doc'):
     frames.append(parse_atlas_output(doc + "x"))
 
 data = pandas.concat(frames)
-print(data)
+feather.write_dataframe(data, './data/coded_data.feather')
