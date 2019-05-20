@@ -1,0 +1,8 @@
+/venv/*
+/data/*
+/models/*
+*.pyc
+__pycache__/
+
+!data/.gitkeep
+!models/.gitkeep
