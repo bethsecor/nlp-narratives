@@ -14,14 +14,8 @@ for doc in glob('./data/*.doc'):
     frames.append(parse_atlas_output(doc + "x"))
 
 data = pandas.concat(frames)
-uniq_segment = numpy.unique(data['segment'])
-data_uniq = pandas.DataFrame({'uniq_segment': uniq_segment, 
-                              'dataset': choice(['TRAIN','TEST'],len(uniq_segment),p=(0.7, 0.3))})
-merge_data = data.merge(data_uniq, how='left', left_on='segment', right_on='uniq_segment')
-final_data = merge_data.drop(columns=['uniq_segment'])
-print(Counter(final_data['dataset']))
-
-transformed_data = transform(final_data, 'code')
+transformed_data = transform(data, 'code')
+transformed_data['dataset'] = choice(['TRAIN','TEST'], len(transformed_data['segment']), p=(0.7, 0.3))
 print(transformed_data)
 print(Counter(transformed_data['dataset']))
 feather.write_dataframe(transformed_data, './data/coded_data.feather')
