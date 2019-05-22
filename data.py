@@ -1,5 +1,6 @@
 from narratives.coded.parse import parse_atlas_output
 from narratives.coded.convert import convert_doc2docx
+from narratives.coded.transform import transform
 from glob import glob
 from pandas import pandas
 import numpy
@@ -20,4 +21,7 @@ merge_data = data.merge(data_uniq, how='left', left_on='segment', right_on='uniq
 final_data = merge_data.drop(columns=['uniq_segment'])
 print(Counter(final_data['dataset']))
 
-feather.write_dataframe(final_data, './data/coded_data.feather')
+transformed_data = transform(final_data, 'code')
+print(transformed_data)
+print(Counter(transformed_data['dataset']))
+feather.write_dataframe(transformed_data, './data/coded_data.feather')
