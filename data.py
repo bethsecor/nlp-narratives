@@ -19,7 +19,7 @@ transformed_data = transform(data, 'code')
 transformed_data['dataset'] = choice(['TRAIN','TEST'], len(transformed_data['segment']), p=(0.7, 0.3))
 print(Counter(transformed_data['dataset']))
 
-processed_data = process(transformed_data)
+processed_data = process(transformed_data, 'segment')
 print(processed_data)
 
 feather.write_dataframe(processed_data, './data/coded_data.feather')

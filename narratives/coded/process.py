@@ -2,11 +2,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 stopWords = set(stopwords.words('english'))
 
-def process(df, segment):
-    df[segment + "_swr"] = remove_stopwords(df[segment])
-    return df
-
-def remove_stepwords(string):
+def remove_stopwords(string):
     words = word_tokenize(string)
     wordsFiltered = []
 
@@ -14,4 +10,8 @@ def remove_stepwords(string):
         if w not in stopWords:
             wordsFiltered.append(w)
 
-    return ' '.join(wordsFiltered)   
+    return ' '.join(wordsFiltered)
+
+def process(df, segment):
+    df[segment + "_swr"] = remove_stopwords(df[segment])
+    return df

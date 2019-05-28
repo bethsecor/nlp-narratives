@@ -13,4 +13,6 @@ Log in as EC2 and run the following:
 > sudo yum localinstall *.rpm
 >
 > sudo yum install libXinerama.x86_64 cups-libs dbus-glib
+> 
+> sudo python -m nltk.downloader -d /usr/local/share/nltk_data all
 
