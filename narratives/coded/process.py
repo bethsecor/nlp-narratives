@@ -6,6 +6,7 @@ from nltk.stem import WordNetLemmatizer
 englishSnowballStemmer = SnowballStemmer("english", ignore_stopwords=True)
 stopWords = set(stopwords.words('english'))
 wordNetLemma = WordNetLemmatizer()
+punctuations = "?:!.,;\'\"><()[]{}+=``"
 
 def get_wordnet_pos(word):
     """Map POS tag to first character lemmatize() accepts"""
@@ -29,7 +30,7 @@ def process_segments(stringList, function):
             elif function == "lemmatize":
                 wordsProcessed.append(wordNetLemma.lemmatize(w, get_wordnet_pos(w)))
             elif function == "stopwords":
-                if w not in stopWords:
+                if w not in stopWords and w not in punctuations:
                     wordsProcessed.append(w.lower())
         
         processedList.append(' '.join(wordsProcessed))
@@ -38,6 +39,6 @@ def process_segments(stringList, function):
 
 def process(df, segment):
     df[segment + "_swr"] = process_segments(df[segment], "stopwords")
-    df[segment + "_stem"] = process_segments(df[segment], "stem")
+    df[segment + "_stem"] = process_segments(df[segment + "_swr"], "stem")
     df[segment + "_lemm"] = process_segments(df[segment + "_swr"], "lemmatize")
     return df
