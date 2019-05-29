@@ -1,7 +1,7 @@
 from nltk.corpus import stopwords
 from nltk.tokenize import sent_tokenize, word_tokenize
-from nltk.stem import PorterStemmer
-porter=PorterStemmer()
+from nltk.stem.snowball import SnowballStemmer
+englishSnowballStemmer = SnowballStemmer("english", ignore_stopwords=True)
 stopWords = set(stopwords.words('english'))
 
 def process_segments(stringList, function):
@@ -12,7 +12,7 @@ def process_segments(stringList, function):
 
         for w in words:
             if function == "stem":
-                wordsProcessed.append(porter.stem(w))
+                wordsProcessed.append(englishSnowballStemmer.stem(w))
             elif function == "stopwords":
                 if w not in stopWords:
                     wordsProcessed.append(w)
@@ -23,6 +23,6 @@ def process_segments(stringList, function):
 
 def process(df, segment):
     df[segment + "_swr"] = process_segments(df[segment], "stopwords")
-    df[segment + "_swr_stem"] = process_segments(df[segment + "_swr"], "stem")
+    df[segment + "_stem"] = process_segments(df[segment], "stem")
 
     return df
