@@ -7,4 +7,4 @@ def extract_count(processed_variable):
     return cv.fit_transform(processed_variable)
 
 def extract_tfidf(processed_variable):
-    return tfidf.fit_transform(processed_variable)
+    return tfidf.fit_transform(extract_count(processed_variable))
