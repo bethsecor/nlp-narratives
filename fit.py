@@ -3,6 +3,7 @@ from collections import Counter
 from narratives.models.logistic import logistic
 from narratives.models.naivebayes import naivebayes
 from narratives.models.supportvector import supportvector
+import joblib
 
 data = feather.read_dataframe('./data/coded_data.feather')
 
@@ -19,10 +20,10 @@ train = data[data.dataset == 'TRAIN']
 test = data[data.dataset == 'TEST']
 
 for code in y_vars_10:
-    for x in x_vars:
-        lr = logistic(train, code, x)
-        print(lr)
-        nb = naivebayes(train, code, x)
-        print(nb)
-        svm = supportvector(train, code, x)
-        print(svm)
+#    for x in x_vars:
+    lr = logistic(train, code, 'segment')
+    joblib.dump(lr, './models/' + code.replace(' ', '\ ').replace('/', '-') + '.joblib')
+#       nb = naivebayes(train, code, x)
+#       print(nb)
+#       svm = supportvector(train, code, x)
+#       print(svm)
