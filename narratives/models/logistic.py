@@ -1,8 +1,9 @@
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import cross_val_score
+from sklearn.pipeline import Pipeline
 
-def logistic(code, x_vars_ext):
-    for x in x_vars_ext:
-        lr = LogisticRegression()
-        lr.fit(train[x], code)
-   # add cross validation here and output best model based on metric 
+def logistic(data, code, x):
+    model = Pipeline([('cntvec', CountVectorizer()),
+                      ('tfidf', TfidfTransformer()),
+                      ('clf', LogisticRegression(penalty="l2", solver="liblinear", multi_class="auto"))])
+    return model.fit(data[x], data[code])

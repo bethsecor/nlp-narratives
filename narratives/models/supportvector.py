@@ -1,5 +1,10 @@
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.svm import SVC
+from sklearn.pipeline import Pipeline
 
-def supportvector(x, y):
-    svc = SVC(gamma='auto')
-    return svc.fit(x, y)
+def supportvector(data, code, x):
+    model = Pipeline([('cntvec', CountVectorizer()),
+                      ('tfidf', TfidfTransformer()),
+                      ('clf', SVC())])
+    return model.fit(data[x], data[code])
+

@@ -1,6 +1,8 @@
-from narratives.models.extract import extract_count, extract_tfidf
-from collections import Counter
 import feather
+from collections import Counter
+from narratives.models.logistic import logistic
+from narratives.models.naivebayes import naivebayes
+from narratives.models.supportvector import supportvector
 
 data = feather.read_dataframe('./data/coded_data.feather')
 
@@ -13,13 +15,14 @@ y_vars_10 = [var for var in y_vars if Counter(data[var])[1] >= 10]
 print('Number of codes with 10 or more occurences: ' + str(len(y_vars_10)))
 
 data = data[x_vars + y_vars_10 + ['dataset']]
-
-for x in x_vars:
-    data[x + '_cnt'] = extract_count(data[x])
-    data[x + '_tfidf'] = extract_tfidf(data[x])
-
 train = data[data.dataset == 'TRAIN']
 test = data[data.dataset == 'TEST']
 
-x_vars_ext = ['segment_cnt','segment_tfidf','segment_swr_cnt','segment_swr_tfidf','segment_stem_cnt','segment_lemm_cnt','segment_lemm_tfidf']
-
+for code in y_vars_10:
+    for x in x_vars:
+        lr = logistic(train, code, x)
+        print(lr)
+        nb = naivebayes(train, code, x)
+        print(nb)
+        svm = supportvector(train, code, x)
+        print(svm)
