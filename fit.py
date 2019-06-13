@@ -22,7 +22,7 @@ train = data[data.dataset == 'TRAIN']
 test = data[data.dataset == 'TEST']
 
 model_evaluation = pandas.DataFrame({'code':[],'x':[],'method':[],'dataset':[],'accuracy':[],'cohen_kappa':[]})
-for code in ['Communication']:
+for code in y_vars_10:
 #    for x in x_vars:
     x = 'segment'
     lr = logistic(train, code, x)
