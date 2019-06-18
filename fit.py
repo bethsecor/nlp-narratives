@@ -26,7 +26,8 @@ for code in y_vars_10:
 #    for x in x_vars:
     x = 'segment'
     lr = logistic(train, code, x)
-    joblib.dump(lr, './models/' + code.replace(' ', '\ ').replace('/', '-') + '.joblib')
+    
+    joblib.dump(lr, './models/' + code + '.joblib')
     lr_pred_train = lr.predict(train[x])
     model_evaluation = model_evaluation.append(pandas.DataFrame({'code':[code],'x':[x],'method':['logistic'],'dataset':['train'],
                             'accuracy':[accuracy_score(train[code], lr_pred_train)],
