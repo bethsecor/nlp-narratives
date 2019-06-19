@@ -2,6 +2,8 @@ from flask import Flask, request
 from os import listdir
 from os.path import isfile, join, basename
 import joblib
+from nltk import tokenize
+import json
 
 ## Load Models ##
 path = './models/'
@@ -16,9 +18,17 @@ app = Flask(__name__)
 
 @app.route("/predict", methods=["POST"])
 def predict_codes():
-    narrative = request.json["narrative"]
-    
-    return "test: " + narrative
+    segments = tokenize.sent_tokenize(request.json['narrative'])
+    print(segments) 
+    results = {}
+    for seg in segments:
+        model_results = {}
+        for code, model in models.items():
+            print(code)
+            model_results[basename(code)] = str(model.predict([seg])[0])
+        results[seg] = model_results
+    print(results)
+    return json.dumps(results)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000, host="0.0.0.0")
