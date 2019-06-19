@@ -1,0 +1,11 @@
+<html>
+   <body>
+      <title> Predict Codes </title>
+      <h1> Please upload a CSV file: </h1>     
+      <form action = "{{ url_for('predict') }}" method = "POST" 
+         enctype = "multipart/form-data">
+         <input type = "file" name = "file" />
+         <input type = "submit"/>
+      </form>
+   </body>
+</html>
