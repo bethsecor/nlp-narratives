@@ -1,4 +1,4 @@
-from flask import Flask, request, flash, redirect, url_for
+from flask import Flask, request, flash, redirect, url_for, render_template
 from os import listdir
 from os.path import isfile, join, basename
 import joblib
@@ -6,6 +6,7 @@ from nltk import tokenize
 import json
 from werkzeug import secure_filename
 import pandas
+import math
 
 ## File upload location ##
 UPLOAD_FOLDER = './data/'
@@ -34,6 +35,13 @@ def iterate_models(text):
         results[seg] = model_results
     return results
 
+## Check CSV for empty cells
+def handle(cell):
+    if not isinstance(cell, str) and math.isnan(cell):
+        return ''
+    else:
+        return cell
+
 ## Application ##
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -41,31 +49,31 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
 @app.route("/upload", methods=["GET"])
 def csv_form():
-    return render_template('./templates/upload.html')
+    return render_template('upload.html')
 
 @app.route("/predict", methods=["GET","POST"])
 def upload_and_predict_codes():
-    if request.method = 'POST':
+    if request.method == 'POST':
         if 'file' not in request.files:
             flash('No file.')
-            return redirect(request.url_for('upload'))
+            return redirect(request.url_for('csv_form'))
         file = request.files['file']
         if file.filename == '':
-            flash('No file selected.')
-            return redirect(request.url_for('upload'))
+            #flash('No file selected.')
+            return redirect(url_for('csv_form'))
         elif not allowed_file(file.filename):
-            flash('File not a CSV')
-            return redirect(request.url_for('upload'))
+            #flash('File not a CSV')
+            return redirect(url_for('csv_form'))
         else:
-            path_file = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)
+            path_file = join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
             file.save(path_file)
-            
-            narratives = pandas.read_csv(path_file)    
+            print("File saved here: " + path_file)
+            narratives = pandas.read_csv(path_file, encoding = "ISO-8859-1")    
             
             results = {}
             for index, row in narratives.iterrows():
-                results[row['state']] = {'successes': iterate_models(row['Task_Qtrly_Successes']), 
-                                         'challenges': iterate_models(row['Task_Qtrly_Challenges'])}
+                results[row['state']] = {'successes': iterate_models(handle(row['Task_Qtrly_Successes'])), 
+                                         'challenges': iterate_models(handle(row['Task_Qtrly_Challenges']))}
             
             return json.dumps(results)
 
