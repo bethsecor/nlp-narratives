@@ -1,12 +1,30 @@
 <html>
+    <head>
+        <title>NCC Narratives</title>
+        <link href="static/css/bootstrap.min.css" rel="stylesheet">
+        <link href="static/css/styles.css" rel="stylesheet">
+    </head>
     <body>
-        <title> Predict Codes </title>
-        <h1> Please upload a CSV file: </h1>     
+        <nav class="navbar navbar-custom" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">
+                        <img alt="Telligen" src="static/img/brand.iix" style="width: 75%; height: 75%">
+                    </a>
+                    <br><br>
+                </div>
+            </div>
+        </nav>
+
+        <br>
+
         <form action = "{{ url_for('upload_and_predict_codes') }}" 
               method = "POST" 
               enctype = "multipart/form-data">
-            <input type = "file" name = "file" />
-            <input type = "submit"/>
+            Please upload a CSV file:<br>
+            <input type = "file" class="btn btl-lg btn-primary" name = "file" /><br>
+            <input type = "submit" class="btn btl-lg btn-primary"/>
         </form>
     </body>
 </html>
+

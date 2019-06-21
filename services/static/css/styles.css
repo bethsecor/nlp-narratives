@@ -1,0 +1,20 @@
+.navbar-custom {
+    background-color: #009ddc;
+}
+
+.btn-primary {
+    background-color: #009ddc !important;
+    border-color: #008bc3 !important;
+}
+
+body {
+    background-color: #f0f3f4 !important;
+}
+
+.container {
+    background-color: #ffffff !important;
+}
+
+div {
+    border-color: #dddddd !important;
+}
