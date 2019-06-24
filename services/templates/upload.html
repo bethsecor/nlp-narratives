@@ -18,13 +18,19 @@
 
         <br>
 
-        <form action = "{{ url_for('upload_and_predict_codes') }}" 
-              method = "POST" 
-              enctype = "multipart/form-data">
-            Please upload a CSV file:<br>
-            <input type = "file" name = "file" id="file-upload"/><br>
-            <input type = "submit" value="Submit"/>
-        </form>
+        <div class="container border border-color rounded">
+            <form action = "{{ url_for('upload_and_predict_codes') }}" 
+                  method = "POST" 
+                  enctype = "multipart/form-data">
+                Please upload a CSV file:<br>
+                <div class="upload-btn-wrapper">
+                    <button class="btn btl-lg btn-primary">Upload a file</button>
+                    <input type = "file" name = "file" id="file-upload"/><br>
+                </div><br>
+                <input type = "submit" class="btn btl-lg btn-primary" value="Submit"/>
+            </form>
+            <br>
+        </div>
     </body>
 </html>
 
