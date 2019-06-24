@@ -7,6 +7,7 @@ import json
 from werkzeug import secure_filename
 import pandas
 import math
+import numpy
 
 ## File upload location ##
 UPLOAD_FOLDER = './data/'
@@ -27,12 +28,15 @@ for code in model_names:
 ## Iterate over models ##
 def iterate_models(text):
     segments = tokenize.sent_tokenize(text)
-    results = {}
+    results = pandas.DataFrame({'code':[],
+                                'segment':[],
+                                'prediction':[]})
     for seg in segments:
-        model_results = {}
         for code, model in models.items():
-            model_results[basename(code)] = str(model.predict([seg])[0])
-        results[seg] = model_results
+            results = results.append(pandas.DataFrame({'code':[code.replace('.joblib','')], 
+                                                       'segment':[seg], 
+                                                       'prediction':[model.predict([seg])[0]]}), sort=False)
+    results = results[results.prediction == 1]
     return results
 
 ## Check CSV for empty cells
@@ -45,7 +49,6 @@ def handle(cell):
 ## Application ##
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
 @app.route("/upload", methods=["GET"])
 def csv_form():
@@ -70,12 +73,28 @@ def upload_and_predict_codes():
             print("File saved here: " + path_file)
             narratives = pandas.read_csv(path_file, encoding = "ISO-8859-1")    
             
-            results = {}
+            results =  pandas.DataFrame({'code':[],
+                                         'segment':[],
+                                         'prediction':[],
+                                         'state':[],
+                                         'type':[]})
             for index, row in narratives.iterrows():
-                results[row['state']] = {'successes': iterate_models(handle(row['Task_Qtrly_Successes'])), 
-                                         'challenges': iterate_models(handle(row['Task_Qtrly_Challenges']))}
-            
-            return json.dumps(results)
+                successes =  iterate_models(handle(row['Task_Qtrly_Successes']))
+                successes['type'] = 'Task_Qtrly_Successes'
+                successes['state'] = row.state
+                challenges = iterate_models(handle(row['Task_Qtrly_Challenges']))
+                challenges['type'] = 'Task_Qtrly_Challenges'
+                challenges['state'] = row.state
+                results = results.append([successes, challenges],sort=False)
+
+            results_by_code = {}
+            for code in numpy.unique(results.code):
+                results_by_code[code] = results.segment[results.code == code].tolist()
+
+            print(results)
+            print(results_by_code)
+
+            return json.dumps(results_by_code)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000, host="0.0.0.0")
