@@ -36,7 +36,7 @@ def iterate_models(text):
             results = results.append(pandas.DataFrame({'code':[code.replace('.joblib','')], 
                                                        'segment':[seg], 
                                                        'prediction':[model.predict([seg])[0]]}), sort=False)
-    results = results[results.prediction == 1]
+    results = results[results.prediction > 0]
     return results
 
 ## Check CSV for empty cells
@@ -89,7 +89,9 @@ def upload_and_predict_codes():
 
             results_by_code = {}
             for code in numpy.unique(results.code):
-                results_by_code[code] = results.segment[results.code == code].tolist()
+                results_by_code[code] = [seg+" ("+st+": "+ty+")" for seg,st,ty in zip(results.segment[results.code == code].tolist(),
+                                                                                      results.state[results.code == code].tolist(),
+                                                                                      results.type[results.code == code].tolist())]
 
             print(results)
             print(results_by_code)
