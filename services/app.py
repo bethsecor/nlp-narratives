@@ -87,16 +87,21 @@ def upload_and_predict_codes():
                 challenges['state'] = row.state
                 results = results.append([successes, challenges],sort=False)
 
-            results_by_code = {}
+            results_by_code = ''
             for code in numpy.unique(results.code):
-                results_by_code[code] = [seg+" ("+st+": "+ty+")" for seg,st,ty in zip(results.segment[results.code == code].tolist(),
-                                                                                      results.state[results.code == code].tolist(),
-                                                                                      results.type[results.code == code].tolist())]
+                results_by_code = results_by_code \
+                                  + code + "\n\n" \
+                                  + "\n".join([seg+" ("+st+": "+ty+")" for seg,st,ty in zip(results.segment[results.code == code].tolist(),
+                                                                                            results.state[results.code == code].tolist(),
+                                                                                            results.type[results.code == code].tolist())]) \
+                                  + "\n\n"
 
-            print(results)
-            print(results_by_code)
+            path_txt_results =  join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename).replace('.csv','')+'_results.txt')
+            print(path_txt_results)
+            with open(path_txt_results, 'w') as outfile:
+                outfile.write(results_by_code)
 
-            return json.dumps(results_by_code)
+            return results_by_code
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000, host="0.0.0.0")
