@@ -31,11 +31,11 @@ def iterate_models(text):
     results = pandas.DataFrame({'code':[],
                                 'segment':[],
                                 'prediction':[]})
-    for seg in segments:
-        for code, model in models.items():
-            results = results.append(pandas.DataFrame({'code':[code.replace('.joblib','')], 
-                                                       'segment':[seg], 
-                                                       'prediction':[model.predict([seg])[0]]}), sort=False)
+    for code, model in models.items():
+        results = results.append(pandas.DataFrame({'code':code.replace('.joblib',''), 
+                                                   'segment':segments, 
+                                                   'prediction':model.predict(segments)}), 
+                                                   sort=False)
     results = results[results.prediction > 0]
     return results
 
