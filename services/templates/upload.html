@@ -9,7 +9,7 @@
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="#">
-                        <img alt="Telligen" src="static/img/brand.iix" style="width: 75%; height: 75%">
+                        <img alt="Telligen" src="static/img/brand.iix" style="width: 75%;">
                     </a>
                     <br><br>
                 </div>
@@ -26,9 +26,15 @@
                 <div class="upload-btn-wrapper">
                     <button class="btn btl-lg btn-primary">Upload a file</button>
                     <input type = "file" name = "file" id="file-upload"/><br>
-                </div><br>
+		    <p id="chosenFile"/></p>
+                </div><br><br>
                 <input type = "submit" class="btn btl-lg btn-primary" value="Submit"/>
             </form>
+	    <script>
+              document.getElementById("file-upload").onchange = function() {
+              document.getElementById("chosenFile").innerHTML = this.files[0].name;
+              };
+            </script>
             <br>
         </div>
     </body>
